@@ -1,0 +1,10 @@
+gggggggggg 3000
+aaaa       200
+i          400
+kkkk       800
+ggg        1000
+ttt        900
+125        700
+125        500
+125        900
+qwerty1234 4900

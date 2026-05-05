@@ -1,0 +1,52 @@
+# ==================================================
+# Project
+# ==================================================
+PROJECT_NAME           = "Tetris (C, ncurses)"
+PROJECT_BRIEF          = "Terminal Tetris with layered architecture (core/api/cli)"
+OUTPUT_DIRECTORY       = docs/doxygen
+
+# ==================================================
+# Input
+# ==================================================
+INPUT                  = src
+RECURSIVE              = YES
+
+# Only parse headers + sources
+FILE_PATTERNS          = *.c *.h
+
+# Exclude build and tests
+EXCLUDE                = src/build tests
+
+# ==================================================
+# Extraction
+# ==================================================
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+
+# This is important for C projects
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+# ==================================================
+# Output formats
+# ==================================================
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+
+# ==================================================
+# Warnings
+# ==================================================
+WARN_IF_UNDOCUMENTED   = YES
+WARN_NO_PARAMDOC       = YES
+
+# ==================================================
+# Graphs (optional but useful)
+# ==================================================
+HAVE_DOT               = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+
+# ==================================================
+# Misc
+# ==================================================
+QUIET                  = YES
