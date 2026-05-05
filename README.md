@@ -77,8 +77,6 @@ The game is implemented as a finite state machine with the following states:
 * PAUSE
 * GAME_OVER
 
-![State Machine](docs/images/states.png)
-
 ---
 
 ## Controls
@@ -87,7 +85,7 @@ The game is implemented as a finite state machine with the following states:
 | ----- | ---------------------------- |
 | ← / → | Move piece                   |
 | ↑     | Rotate piece                 |
-| ↓     | Soft drop (accelerated fall) |
+| ↓     | Drop (immediate fall)        |
 | Space | Pause                        |
 | Enter | Start game                   |
 | Esc   | Exit                         |
