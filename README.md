@@ -176,9 +176,3 @@ Unit tests include mocks for isolating modules.
 * Modules communicate only through defined interfaces
 * The frontend cannot modify game state directly
 * Emphasis on deterministic and testable logic
-
----
-
-## License
-
-MIT
