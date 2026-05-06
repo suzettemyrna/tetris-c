@@ -6,7 +6,7 @@
 
 ## Preview
 
-![gameplay gif]()
+![gameplay gif](docs/images/gameplay.gif)
 
 ---
 
