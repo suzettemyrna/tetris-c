@@ -70,6 +70,16 @@ No module has unnecessary knowledge about others.
 
 ## Game State Machine
 
+Main states:
+
+* `START`
+* `SPAWN`
+* `MOVE`
+* `SHIFT` (continuous movement on key hold)
+* `MERGE`
+* `PAUSE`
+* `GAME_OVER`
+
 ```mermaid
 flowchart LR
     A[START] --> B[SPAWN]
@@ -84,16 +94,6 @@ flowchart LR
     D --> B
     E --> A
 ```
-
-Main states:
-
-* `START`
-* `SPAWN`
-* `MOVE`
-* `SHIFT` (continuous movement on key hold)
-* `MERGE`
-* `PAUSE`
-* `GAME_OVER`
 
 ---
 
