@@ -176,7 +176,7 @@ GUI_OBJS = $(GUI_SRCS:%.c=$(OBJ_DIR)/%.o)
 
 # Final targets
 STATIC_LIB = $(LIB_BUILD_DIR)/$(LIB_NAME)
-EXEC_PATH = $(SRC_DIR)/$(EXEC)
+EXEC_PATH = $(EXEC)
 
 TESTS_ALL = tetris_api_test user_actions_test state_machine_test game_info_test score_file_test tetromino_test field_control_test
 

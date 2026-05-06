@@ -1,115 +1,166 @@
-# Tetris in C (ncurses)
+# Tetris (C, ncurses)
 
-A modular implementation of the classic Tetris game written in C using the ncurses library.
-The project focuses on clean architecture, strict separation of concerns, and testability.
-
----
-
-## Features
-
-* Terminal-based UI (ncurses)
-* Fully modular architecture (core / API / UI separation)
-* Finite State Machine for game logic
-* Static memory model (no dynamic allocation)
-* Unit tests with mocks
-* Configurable tetromino system
-* Score tracking
+> A modular Tetris implementation in C focused on clean architecture, state-driven logic, and testability.
 
 ---
 
-## Architecture Overview
+## Preview
 
-The project is divided into three main layers:
-
-### 1. Core (Game Logic)
-
-Responsible for all internal mechanics:
-
-* game state management (FSM)
-* collision detection
-* field updates
-* scoring system
-* tetromino behavior
-
-Key modules:
-
-* `state_machine` — controls game flow
-* `game_info` — central game state and data aggregation
-* `field_control` — field validation and updates
-* `tetromino` — piece representation and rotation logic
+![gameplay gif](docs/images/gameplay.gif)
 
 ---
 
-### 2. API Layer
+## Purpose
 
-Provides a minimal interface between the frontend and the backend.
+This project was built to demonstrate:
 
-```c
-GameState_t getCurrentState();
-GameInfo_t getCurrentGameInfo();
-```
+* ability to design **modular architecture**
+* clear separation between **core logic and interface**
+* implementation of a **finite state machine (FSM)**
+* writing **testable code in C**
+* using **unit tests with mocks**
+* building a complete CLI application from scratch
 
-The frontend has **read-only access** to the game state.
+Although implemented in C, the same principles directly apply to higher-level development (e.g. Python).
 
 ---
 
-### 3. CLI (Frontend)
+## Overview
 
-Handles:
+This is a terminal-based Tetris game built with **ncurses**.
 
-* rendering (ncurses)
-* keyboard input
-* user interaction
+The project is intentionally structured as a **layered system**, where:
 
-The UI is completely decoupled from the game logic.
+* the **core game logic** is completely independent
+* the **API layer** connects logic and interface
+* the **CLI layer** handles rendering and user input only
+
+No module has unnecessary knowledge about others.
+
+---
+
+## Architecture
+
+[project architecture will be here]
+
+### Key Design Decisions
+
+* **Layered structure**
+
+  * `core` — game logic
+  * `api` — communication layer
+  * `cli` — interface (ncurses)
+  * `shared` — configuration
+
+* **Strict boundaries**
+
+  * no cyclic dependencies
+  * controlled data access via API
+
+* **State-driven logic**
+
+  * the entire game is controlled by a finite state machine
+
+* **Static memory model**
+
+  * no dynamic allocation
+  * predictable behavior
 
 ---
 
 ## Game State Machine
 
-The game is implemented as a finite state machine with the following states:
+```mermaid
+fsa_diagram-v2
+    A[START] --> B[SPAWN]
+    B --> C[MOVE]
+    C --> D[MERGE]
+    D --> E[GAME OVER]
+    C <--> F[SHIFT]
+    C <--> G[PAUSE]
+    C --> E
+    G --> E
+    F --> D
+    D --> B
+    E --> A
+```
 
-* START
-* SPAWN
-* MOVE
-* SHIFT
-* MERGE
-* PAUSE
-* GAME_OVER
+Main states:
 
-![State Machine](docs/images/states.png)
+* `START`
+* `SPAWN`
+* `MOVE`
+* `SHIFT` (continuous movement on key hold)
+* `MERGE`
+* `PAUSE`
+* `GAME_OVER`
+
+---
+
+## Module Dependencies
+
+[module dependencies will be here]
+
+Dependency direction is strictly enforced:
+
+```
+cli → api → core
+```
+
+---
+
+## Features
+
+* Classic Tetris gameplay
+* Terminal UI (ncurses)
+* Score system with high score persistence
+* Level progression (speed increases)
+* Continuous movement on key hold
+* Fully testable backend
+* No global state leaks outside API
 
 ---
 
 ## Controls
 
-| Key   | Action                       |
-| ----- | ---------------------------- |
-| ← / → | Move piece                   |
-| ↑     | Rotate piece                 |
-| ↓     | Soft drop (accelerated fall) |
-| Space | Pause                        |
-| Enter | Start game                   |
-| Esc   | Exit                         |
+| Key   | Action             |
+| ----- | ------------------ |
+| ← / → | Move left / right  |
+| ↓     | Immidiate fall     |
+| ↑     | Rotate piece       |
+| SPACE | Pause / resume     |
+| ENTER | Start game         |
+| ESC   | Exit               |
 
 ---
 
-## Scoring System
+## Scoring
 
-| Lines Cleared | Points |
-| ------------- | ------ |
-| 1             | 100    |
-| 2             | 300    |
-| 3             | 700    |
-| 4 (Tetris)    | 1500   |
+* 1 line  → 100 points
+* 2 lines → 300 points
+* 3 lines → 700 points
+* 4 lines → 1500 points
 
-* Level increases every 600 points
-* Speed increases with level
-* Max level is 10
+Level increases every **600 points**.
 
 ---
 
-## Build & Run
+## Project Structure
+
+```
+src/
+├── core/
+├── api/
+├── cli/
+├── shared/
+└── build/
+
+tests/
+```
+
+---
+
+## Build
 
 ### Requirements
 
@@ -118,67 +169,67 @@ The game is implemented as a finite state machine with the following states:
 * ncurses
 * check (for tests)
 
-### Install dependencies (Ubuntu/Debian)
+### Commands
 
 ```bash
-sudo apt-get install build-essential libncurses5-dev libncursesw5-dev check
-```
-
-### Build
-
-```bash
-make
-make gui
-```
-
-### Run
-
-```bash
-./tetris
+make            # build library
+make gui        # build executable
+make release    # full build
 ```
 
 ---
 
-## Project Structure
+## Run
 
-```
-src/
-├── core/        # Game logic
-├── api/         # Public interface
-├── cli/         # Terminal UI
-└── include/     # Headers
+```bash
+./build/bin/tetris
 ```
 
 ---
 
-## Testing
+## Tests
 
 ```bash
-make test
+make tests
 ```
 
-Unit tests include mocks for isolating modules.
+* unit tests written with **Check**
+* modules tested in isolation
+* custom mocks for dependency control
+* coverage report via lcov
+
+---
+
+## What this project demonstrates
+
+This project reflects skills relevant for Python/backend development:
+
+* system decomposition into independent modules
+* API design between layers
+* state machines for complex logic
+* test isolation and mocking
+* separation of business logic from UI
+* predictable and maintainable code structure
+
+---
+
+## Limitations
+
+* no wall-kick system for rotation (planned)
+* soft drop behavior will be improved
+* documentation can be expanded
 
 ---
 
 ## Future Improvements
 
-* Wall kick system (SRS-like rotation)
-* Improved input handling (true soft drop instead of instant drop)
-* Enhanced Doxygen documentation
-* Additional tetromino customization
-* Persistent high score system (user directory)
-
----
-
-## Design Notes
-
-* Modules communicate only through defined interfaces
-* The frontend cannot modify game state directly
-* Emphasis on deterministic and testable logic
+* wall-kick implementation
+* input system refinement
+* improved documentation (Doxygen)
+* extended gameplay features
 
 ---
 
 ## License
 
-MIT
+MIT License
