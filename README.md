@@ -41,30 +41,69 @@ No module has unnecessary knowledge about others.
 
 ## Architecture
 
-[project architecture will be here]
+The project is designed as a **layered system** with a strict separation of responsibilities between components.
 
-### Key Design Decisions
+### Layers
 
-* **Layered structure**
+* **core**
+  Contains the entire game logic:
 
-  * `core` — game logic
-  * `api` — communication layer
-  * `cli` — interface (ncurses)
-  * `shared` — configuration
+  * game state management (finite state machine)
+  * tetromino behavior
+  * field updates and collision handling
+  * scoring and level progression
+    This layer is independent and does not interact with input/output directly.
 
-* **Strict boundaries**
+* **api**
+  Acts as a boundary between the core and external layers:
 
-  * no cyclic dependencies
-  * controlled data access via API
+  * exposes only the necessary data (`GameInfo`, current state)
+  * hides internal implementation details
+  * provides controlled access via functions (`get_*`)
+
+* **cli**
+  Responsible for:
+
+  * user input handling
+  * rendering using ncurses
+    It does not contain game logic and communicates only through the API.
+
+* **shared**
+  Contains common configuration and constants used across multiple layers.
+
+---
+
+### Design Principles
+
+* **Separation of concerns**
+  Each layer has a clearly defined responsibility.
+
+* **Encapsulation**
+  Internal data structures are not exposed directly.
+  All interaction with the core happens through the API.
+
+* **No cyclic dependencies**
+  Modules are organized to avoid mutual dependencies.
 
 * **State-driven logic**
+  The game flow is controlled by a finite state machine, making behavior explicit and predictable.
 
-  * the entire game is controlled by a finite state machine
+* **Controlled memory management**
+  Dynamic memory allocation is minimal and centralized.
+  Memory is allocated only where necessary (e.g. player name) and managed within a single module, avoiding scattered ownership and reducing the risk of leaks.
 
-* **Static memory model**
+---
 
-  * no dynamic allocation
-  * predictable behavior
+### Rationale
+
+This structure allows:
+
+* independent development and testing of the core logic
+* easier reasoning about system behavior
+* clear boundaries between logic and presentation
+* reuse of the backend with different frontends (not limited to CLI)
+
+Overall, the architecture prioritizes **clarity, maintainability, and testability**.
 
 ---
 
