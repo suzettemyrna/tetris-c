@@ -71,7 +71,7 @@ No module has unnecessary knowledge about others.
 ## Game State Machine
 
 ```mermaid
-fsa_diagram-v2
+flowchart LR
     A[START] --> B[SPAWN]
     B --> C[MOVE]
     C --> D[MERGE]
