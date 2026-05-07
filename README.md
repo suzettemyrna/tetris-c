@@ -181,27 +181,28 @@ stateDiagram-v2
 Dependency direction is strictly enforced.
 
 ```text
-        ┌────────────┐
-        │   shared   │
-        └─────┬──────┘
+
+            main.c
               │
               ▼
-        ┌──────────────┐
-        │ game_model   │
-        └─────┬────────┘
+       ┌─────────────┐
+       │  game_loop  │
+       └──────┬──────┘
               │
-      ┌───────┴────────┐
-      ▼                ▼
+      ┌───────┴───────┐
+      ▼               ▼
 ┌──────────┐     ┌──────────┐
 │   core   │     │   cli    │
 └─────┬────┘     └────┬─────┘
-      └────────┬──────┘
-               ▼
-        ┌──────────────┐
-        │  game_loop   │
-        └──────┬───────┘
-               ▼
-            main.c
+      └───────┬───────┘
+              ▼
+       ┌──────────────┐
+       │  game_model  │
+       └──────┬───────┘
+              ▼
+         ┌──────────┐
+         │  shared  │
+         └──────────┘
 ```
 
 More detailed:
@@ -251,8 +252,6 @@ Level increases every **600 points**.
 
 ## Project Structure
 
-## Project Structure
-
 ```text
 src/
 ├── core/          # Backend game logic
@@ -267,7 +266,6 @@ tests/
 ├── mocks/
 └── ...
 ```
-
 ---
 
 ## Build
