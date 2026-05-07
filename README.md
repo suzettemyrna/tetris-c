@@ -161,15 +161,17 @@ stateDiagram-v2
     START --> SPAWN
     SPAWN --> MOVE
     MOVE --> MERGE
-    MERGE --> GAME OVER
-    MOVE <--> SHIFT
-    MOVE <--> PAUSE
-    MOVE --> GAME OVER
-    PAUSE --> GAME OVER
+    MERGE --> GAME_OVER
+    MOVE --> SHIFT
+    SHIFT --> MOVE
+    MOVE --> PAUSE
+    PAUSE --> MOVE
+    MOVE --> GAME_OVER
+    PAUSE --> GAME_OVER
     SHIFT --> MERGE
     MERGE --> SPAWN
-    GAME OVER --> START
-    GAME OVER --> [*]
+    GAME_OVER --> START
+    GAME_OVER --> [*]
 ```
 
 ---
