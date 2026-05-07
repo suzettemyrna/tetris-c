@@ -129,31 +129,36 @@ Main states:
 * `GAME_OVER`
 
 ```mermaid
-flowchart LR
-    A[START] --> B[SPAWN]
-    B --> C[MOVE]
-    C --> D[MERGE]
-    D --> E[GAME OVER]
-    C <--> F[SHIFT]
-    C <--> G[PAUSE]
-    C --> E
-    G --> E
-    F --> D
-    D --> B
-    E --> A
+---
+title: Game State Machine
+---
+stateDiagram-v2
+    [*] --> START
+    START --> SPAWN
+    SPAWN --> MOVE
+    MOVE --> MERGE
+    MERGE --> GAME OVER
+    MOVE <--> SHIFT
+    MOVE <--> PAUSE
+    MOVE --> GAME OVER
+    PAUSE --> GAME OVER
+    SHIFT --> MERGE
+    MERGE --> SPAWN
+    GAME OVER --> START
+    GAME OVER --> [*]
 ```
 
 ---
 
 ## Module Dependencies
 
-[module dependencies will be here]
-
 Dependency direction is strictly enforced:
 
 ```
 cli → api → core
 ```
+
+[module dependencies will be here]
 
 ---
 
