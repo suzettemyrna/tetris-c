@@ -4,7 +4,8 @@
 #include <ncurses.h>
 #include <string.h>
 
-#include "../../api/include/tetris_api.h"
+#include "../../shared/game_config.h"
+#include "../../game_model/game_model.h"
 
 /**
  * @file cli.h

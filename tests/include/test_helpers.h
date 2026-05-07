@@ -8,7 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "../../src/api/include/tetris_api.h"
+#include "../../src/game_model/game_model.h"
 #include "../../src/shared/game_config.h"
 #include "../../src/core/include/backend_objects.h"
 

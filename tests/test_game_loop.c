@@ -1,4 +1,4 @@
-#include "../src/api/tetris_api.c"
+#include "../src/game_loop/game_loop.c"
 #include "include/test_helpers.h"
 
 // =========
@@ -52,7 +52,7 @@ START_TEST(tc_handleStates_when_action_from_input) {
   mock_state_reset();
   mock_set_iteration_limit(4);
 
-// Provide repeated input; mocked handleInput always returns ACTION_LEFT
+  // Provide repeated input; mocked handleInput always returns ACTION_LEFT
   int seq[] = {'A', 'A', 'A', 'A'};
   mock_set_input_sequence(seq, 4);
   mock_handleInput_return = ACTION_LEFT;

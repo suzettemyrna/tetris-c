@@ -29,91 +29,115 @@ Although implemented in C, the same principles directly apply to higher-level de
 
 This is a terminal-based Tetris game built with **ncurses**.
 
-The project is intentionally structured as a **layered system**, where:
+The project is intentionally structured as a **layered modular system**, where:
 
-* the **core game logic** is completely independent
-* the **API layer** connects logic and interface
+* the **core layer** contains all game mechanics and state transitions
+* the **game model layer** exposes read-only game data structures
+* the **game loop layer** orchestrates interaction between backend and frontend
 * the **CLI layer** handles rendering and user input only
 
-No module has unnecessary knowledge about others.
+The gameplay logic is fully separated from rendering and input handling.
+Core modules do not depend on the interface layer and remain independently testable.
 
 ---
 
 ## Architecture
 
-The project is designed as a **layered system** with a strict separation of responsibilities between components.
+The project is organized as a modular layered system with strict responsibility boundaries between components.
 
 ### Layers
 
 * **core**
-  
-  Contains the entire game logic:
 
-  * game state management (finite state machine)
-  * tetromino behavior
-  * field updates and collision handling
-  * scoring and level progression
-    This layer is independent and does not interact with input/output directly.
+  Contains the entire backend game logic:
 
-* **api**
-  
-  Acts as a boundary between the core and external layers:
+  * finite state machine
+  * tetromino manipulation
+  * collision detection
+  * field updates
+  * scoring system
+  * level progression
+  * internal game state management
 
-  * exposes only the necessary data (`GameInfo`, current state)
-  * hides internal implementation details
-  * provides controlled access via functions (`get_*`)
+  This layer contains no rendering or terminal-specific logic.
+
+* **game_model**
+
+  Defines shared public game structures and enums:
+
+  * `GameInfo_t`
+  * `GameState_t`
+  * `UserInput_t`
+
+  This layer acts as a lightweight contract between backend and frontend components.
+
+* **game_loop**
+
+  Coordinates the application runtime:
+
+  * receives user input from CLI
+  * invokes backend state transitions
+  * synchronizes rendering
+  * controls automatic falling timing
+
+  This layer is the only place where backend and frontend interact together.
 
 * **cli**
-  
-  Responsible for:
 
-  * user input handling
-  * rendering using ncurses
-    It does not contain game logic and communicates only through the API.
+  Responsible only for terminal interaction:
+
+  * rendering via ncurses
+  * keyboard input handling
+  * screen management
+
+  The CLI layer does not contain gameplay logic.
 
 * **shared**
-  
-  Contains common configuration and constants used across multiple layers.
+
+  Contains common configuration constants shared across modules.
 
 ---
 
 ### Design Principles
 
 * **Separation of concerns**
-  
-  Each layer has a clearly defined responsibility.
 
-* **Encapsulation**
-  
-  Internal data structures are not exposed directly.
-  All interaction with the core happens through the API.
+  Each module has a single well-defined responsibility.
 
 * **No cyclic dependencies**
-  
-  Modules are organized to avoid mutual dependencies.
 
-* **State-driven logic**
-  
-  The game flow is controlled by a finite state machine, making behavior explicit and predictable.
+  Dependencies are organized in a one-directional flow.
 
-* **Controlled memory management**
-  
-  Dynamic memory allocation is minimal and centralized.
-  Memory is allocated only where necessary (e.g. player name) and managed within a single module, avoiding scattered ownership and reducing the risk of leaks.
+* **State-driven architecture**
+
+  Gameplay behavior is controlled through an explicit finite state machine.
+
+* **Minimal shared state**
+
+  Game data access is controlled and centralized.
+
+* **Controlled dynamic memory management**
+
+  Dynamic allocation is intentionally minimal.
+  Heap memory is used only for player name storage and managed exclusively inside the `game_info` module.
+
+* **Testability**
+
+  Core modules can be tested independently using mocks and isolated unit tests.
 
 ---
 
 ### Rationale
 
-This structure allows:
+This structure improves:
 
-* independent development and testing of the core logic
-* easier reasoning about system behavior
-* clear boundaries between logic and presentation
-* reuse of the backend with different frontends (not limited to CLI)
+* maintainability
+* readability
+* module isolation
+* testability
+* backend/frontend separation
 
-Overall, the architecture prioritizes **clarity, maintainability, and testability**.
-
+It also makes the project easier to extend with alternative frontends in the future.
 ---
 
 ## Game State Machine
@@ -152,11 +176,33 @@ stateDiagram-v2
 
 ## Module Dependencies
 
-Dependency direction is strictly enforced:
+Dependency direction is strictly enforced.
 
+```text
+        ┌────────────┐
+        │   shared   │
+        └─────┬──────┘
+              │
+              ▼
+        ┌──────────────┐
+        │ game_model   │
+        └─────┬────────┘
+              │
+      ┌───────┴────────┐
+      ▼                ▼
+┌──────────┐     ┌──────────┐
+│   core   │     │   cli    │
+└─────┬────┘     └────┬─────┘
+      └────────┬──────┘
+               ▼
+        ┌──────────────┐
+        │  game_loop   │
+        └──────┬───────┘
+               ▼
+            main.c
 ```
-cli → api → core
-```
+
+More detailed:
 
 [module dependencies will be here]
 
@@ -165,12 +211,15 @@ cli → api → core
 ## Features
 
 * Classic Tetris gameplay
-* Terminal UI (ncurses)
-* Score system with high score persistence
-* Level progression (speed increases)
+* Terminal UI using ncurses
+* Finite State Machine (FSM) architecture
+* High score persistence
+* Level progression with dynamic speed increase
 * Continuous movement on key hold
-* Fully testable backend
-* No global state leaks outside API
+* Modular layered architecture
+* Isolated backend testing with mocks
+* Doxygen documentation support
+* Coverage report generation via lcov
 
 ---
 
@@ -200,15 +249,21 @@ Level increases every **600 points**.
 
 ## Project Structure
 
-```
+## Project Structure
+
+```text
 src/
-├── core/
-├── api/
-├── cli/
-├── shared/
+├── core/          # Backend game logic
+├── cli/           # ncurses frontend
+├── game_loop/     # Runtime orchestration layer
+├── game_model/    # Shared public game structures
+├── shared/        # Shared configuration/constants
+├── main.c         # Application entry point
 └── build/
 
 tests/
+├── mocks/
+└── ...
 ```
 
 ---
@@ -221,13 +276,18 @@ tests/
 * make
 * ncurses
 * check (for tests)
+* lcov (optional, for coverage reports)
+* doxygen (optional, for documentation)
 
 ### Commands
 
 ```bash
 make            # build library
 make gui        # build executable
-make release    # full build
+make release    # build executable and static library
+make tests      # run tests + generate coverage report
+make dvi        # generate Doxygen documentation
+make clean      # remove build artifacts
 ```
 
 ---
@@ -235,7 +295,7 @@ make release    # full build
 ## Run
 
 ```bash
-./build/bin/tetris
+./tetris
 ```
 
 ---
@@ -246,40 +306,43 @@ make release    # full build
 make tests
 ```
 
-* unit tests written with **Check**
-* modules tested in isolation
-* custom mocks for dependency control
-* coverage report via lcov
+Testing is performed with the **Check** framework.
+
+The project uses:
+
+* isolated unit tests
+* dependency mocking
+* per-module testing
+* coverage analysis with lcov
+
+Coverage reports are generated automatically after test execution.
 
 ---
 
 ## What this project demonstrates
 
-This project reflects skills relevant for Python/backend development:
+This project demonstrates engineering practices relevant for backend and systems development:
 
-* system decomposition into independent modules
-* API design between layers
-* state machines for complex logic
-* test isolation and mocking
-* separation of business logic from UI
-* predictable and maintainable code structure
+* modular architecture design
+* separation of logic and presentation
+* finite state machine implementation
+* dependency isolation
+* unit testing with mocks
+* controlled memory management
+* maintainable procedural C code
+* layered application structure
 
----
-
-## Limitations
-
-* no wall-kick system for rotation (planned)
-* soft drop behavior will be improved
-* documentation can be expanded
+Although implemented in C, the architectural principles directly translate to backend development in higher-level languages such as Python.
 
 ---
 
 ## Future Improvements
 
-* wall-kick implementation
-* input system refinement
-* improved documentation (Doxygen)
-* extended gameplay features
+* wall-kick rotation system
+* improved soft-drop behavior
+* additional gameplay features
+* expanded Doxygen documentation
+* alternative frontend support
 
 ---
 

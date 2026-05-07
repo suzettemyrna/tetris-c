@@ -16,11 +16,13 @@ SRC_DIR = ./src
 CORE_DIR = $(SRC_DIR)/core
 CORE_INCLUDE_DIR = $(CORE_DIR)/include
 
-API_DIR = $(SRC_DIR)/api
-API_INCLUDE_DIR = $(API_DIR)/include
-
 CLI_DIR = $(SRC_DIR)/cli
 CLI_INCLUDE_DIR = $(CLI_DIR)/include
+
+LOOP_DIR = $(SRC_DIR)/game_loop
+LOOP_INCLUDE_DIR = $(GAME_LOOP_DIR)/include
+
+MODEL_DIR = $(SRC_DIR)/game_model
 
 SHARED_DIR = $(SRC_DIR)/shared
 
@@ -80,17 +82,17 @@ LIB_SRCS = \
 	$(CORE_DIR)/score_file.c \
 	$(CORE_DIR)/state_machine.c \
 	$(CORE_DIR)/tetromino.c \
-	$(CORE_DIR)/user_actions.c \
-	$(API_DIR)/tetris_api.c
+	$(CORE_DIR)/user_actions.c
 
 # GUI (client) source files
 GUI_SRCS = \
-    $(CLI_DIR)/cli.c \
-    $(CLI_DIR)/main.c
+	$(SRC_DIR)/main.c \
+	$(CLI_DIR)/cli.c \
+	$(LOOP_DIR)/game_loop.c
 
 # Test source files
 TESTS_SRCS = \
-	$(TESTS_DIR)/test_tetris_api.c \
+	$(TESTS_DIR)/test_game_loop.c \
 	$(TESTS_DIR)/test_user_actions.c \
 	$(TESTS_DIR)/test_state_machine.c \
 	$(TESTS_DIR)/test_game_info.c \
@@ -110,8 +112,8 @@ TESTS_SRCS = \
 	$(MOCKS_DIR)/mock_user_actions.c
 
 # Per-test source groups
-TEST_T_A_SRCS = \
-	$(TESTS_DIR)/test_tetris_api.c \
+TEST_G_L_SRCS = \
+	$(TESTS_DIR)/test_game_loop.c \
 	$(MOCKS_DIR)/mock_cli.c \
 	$(MOCKS_DIR)/mock_state_machine_T_A.c \
 	$(MOCKS_DIR)/mock_game_info_T_A.c \
@@ -148,7 +150,7 @@ TEST_F_C_SRCS = \
 
 # Public headers
 PUBLIC_HEADERS = \
-	$(API_INCLUDE_DIR)/tetris_api.h \
+	$(MODEL_DIR)/game_model.h \
 	$(SHARED_DIR)/game_config.h
 
 # Private headers
@@ -178,7 +180,7 @@ GUI_OBJS = $(GUI_SRCS:%.c=$(OBJ_DIR)/%.o)
 STATIC_LIB = $(LIB_BUILD_DIR)/$(LIB_NAME)
 EXEC_PATH = $(EXEC)
 
-TESTS_ALL = tetris_api_test user_actions_test state_machine_test game_info_test score_file_test tetromino_test field_control_test
+TESTS_ALL = game_loop_test user_actions_test state_machine_test game_info_test score_file_test tetromino_test field_control_test
 
 # ============================================
 # Main targets
@@ -218,8 +220,9 @@ $(OBJ_DIR)/%.o: %.c $(PUBLIC_HEADERS) $(PRIVATE_HEADERS)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS_RELEASE) \
 	-I$(CORE_INCLUDE_DIR) \
-	-I$(API_INCLUDE_DIR) \
 	-I$(CLI_INCLUDE_DIR) \
+	-I$(LOOP_INCLUDE_DIR) \
+	-I$(MODEL_DIR) \
 	-I$(SHARED_DIR) \
 	-c $< -o $@
 
@@ -246,22 +249,23 @@ tests: $(TESTS_BUILD_DIR) $(TESTS_ALL)
 	 elif command -v open >/dev/null 2>&1; then open $(GCOV_DIR)/combined/html/index.html >/dev/null 2>&1 || true; \
 	 else echo \"Open the coverage report at: $(GCOV_DIR)/combined/html/index.html\"; fi
 
-tetris_api_test: $(TESTS_BUILD_DIR)
-	@echo "Building tetris_api tests..."
-	$(CC) $(CFLAGS_TEST) $(TEST_T_A_SRCS) $(LDFLAGS_TEST) -I$(CORE_INCLUDE_DIR) \
-	-I$(API_INCLUDE_DIR) \
+game_loop_test: $(TESTS_BUILD_DIR)
+	@echo "Building game_loop tests..."
+	$(CC) $(CFLAGS_TEST) $(TEST_G_L_SRCS) $(LDFLAGS_TEST) -I$(CORE_INCLUDE_DIR) \
 	-I$(CLI_INCLUDE_DIR) \
-	-I$(SHARED_DIR) -o $(TESTS_BUILD_DIR)/test_tetris_api
-	@echo "Running tetris_api tests..."
-	$(TESTS_BUILD_DIR)/test_tetris_api || exit 1
-	@echo "tetris_api tests done."
-
+	-I$(LOOP_INCLUDE_DIR) \
+	-I$(MODEL_DIR) \
+	-I$(SHARED_DIR) -o $(TESTS_BUILD_DIR)/test_game_loop
+	@echo "Running game_loop tests..."
+	$(TESTS_BUILD_DIR)/test_game_loop || exit 1
+	@echo "game_loop tests done."
 
 user_actions_test: $(TESTS_BUILD_DIR)
 	@echo "Building user_actions tests..."
 	$(CC) $(CFLAGS_TEST) $(TEST_U_A_SRCS) $(LDFLAGS_TEST) -I$(CORE_INCLUDE_DIR) \
-	-I$(API_INCLUDE_DIR) \
 	-I$(CLI_INCLUDE_DIR) \
+	-I$(LOOP_INCLUDE_DIR) \
+	-I$(MODEL_DIR) \
 	-I$(SHARED_DIR) -o $(TESTS_BUILD_DIR)/test_user_actions
 	@echo "Running user_actions tests..."
 	$(TESTS_BUILD_DIR)/test_user_actions || exit 1
@@ -270,8 +274,9 @@ user_actions_test: $(TESTS_BUILD_DIR)
 state_machine_test: $(TESTS_BUILD_DIR)
 	@echo "Building state_machine tests..."
 	$(CC) $(CFLAGS_TEST) $(TEST_S_M_SRCS) $(LDFLAGS_TEST) -I$(CORE_INCLUDE_DIR) \
-	-I$(API_INCLUDE_DIR) \
 	-I$(CLI_INCLUDE_DIR) \
+	-I$(LOOP_INCLUDE_DIR) \
+	-I$(MODEL_DIR) \
 	-I$(SHARED_DIR) -o $(TESTS_BUILD_DIR)/test_state_machine
 	@echo "Running state_machine tests..."
 	$(TESTS_BUILD_DIR)/test_state_machine || exit 1
@@ -280,8 +285,9 @@ state_machine_test: $(TESTS_BUILD_DIR)
 game_info_test: $(TESTS_BUILD_DIR)
 	@echo "Building game_info tests..."
 	$(CC) $(CFLAGS_TEST) $(TEST_G_I_SRCS) $(LDFLAGS_TEST) -I$(CORE_INCLUDE_DIR) \
-	-I$(API_INCLUDE_DIR) \
 	-I$(CLI_INCLUDE_DIR) \
+	-I$(LOOP_INCLUDE_DIR) \
+	-I$(MODEL_DIR) \
 	-I$(SHARED_DIR) -o $(TESTS_BUILD_DIR)/test_game_info
 	@echo "Running game_info tests..."
 	$(TESTS_BUILD_DIR)/test_game_info || exit 1
@@ -290,8 +296,9 @@ game_info_test: $(TESTS_BUILD_DIR)
 score_file_test: $(TESTS_BUILD_DIR)
 	@echo "Building score_file tests..."
 	$(CC) $(CFLAGS_TEST) $(TEST_S_F_SRCS) $(LDFLAGS_TEST) -I$(CORE_INCLUDE_DIR) \
-	-I$(API_INCLUDE_DIR) \
 	-I$(CLI_INCLUDE_DIR) \
+	-I$(LOOP_INCLUDE_DIR) \
+	-I$(MODEL_DIR) \
 	-I$(SHARED_DIR) -o $(TESTS_BUILD_DIR)/test_score_file
 	@echo "Running score_file tests..."
 	$(TESTS_BUILD_DIR)/test_score_file || exit 1
@@ -300,8 +307,9 @@ score_file_test: $(TESTS_BUILD_DIR)
 tetromino_test: $(TESTS_BUILD_DIR)
 	@echo "Building tetromino tests..."
 	$(CC) $(CFLAGS_TEST) $(TEST_T_M_SRCS) $(LDFLAGS_TEST) -I$(CORE_INCLUDE_DIR) \
-	-I$(API_INCLUDE_DIR) \
 	-I$(CLI_INCLUDE_DIR) \
+	-I$(LOOP_INCLUDE_DIR) \
+	-I$(MODEL_DIR) \
 	-I$(SHARED_DIR) -o $(TESTS_BUILD_DIR)/test_tetromino
 	@echo "Running tetromino tests..."
 	$(TESTS_BUILD_DIR)/test_tetromino || exit 1
@@ -310,8 +318,9 @@ tetromino_test: $(TESTS_BUILD_DIR)
 field_control_test: $(TESTS_BUILD_DIR)
 	@echo "Building field_control tests..."
 	$(CC) $(CFLAGS_TEST) $(TEST_F_C_SRCS) $(LDFLAGS_TEST) -I$(CORE_INCLUDE_DIR) \
-	-I$(API_INCLUDE_DIR) \
 	-I$(CLI_INCLUDE_DIR) \
+	-I$(LOOP_INCLUDE_DIR) \
+	-I$(MODEL_DIR) \
 	-I$(SHARED_DIR) -o $(TESTS_BUILD_DIR)/test_field_control
 	@echo "Running field_control tests..."
 	$(TESTS_BUILD_DIR)/test_field_control || exit 1
@@ -322,12 +331,12 @@ field_control_test: $(TESTS_BUILD_DIR)
 # ============================================
 
 clean:
-	-rm *.gcno
-	@echo "Project directory cleaned"
 	rm -rf $(BUILD_DIR)
 	@echo "Build directory cleaned"
 	rm -rf $(TESTS_BUILD_DIR) $(GCOV_DIR) $(TESTS_DIR)/tests_assets/test_scorefile.txt
 	@echo "Tests directory cleaned"
+	-rm -rf docs/doxygen/
+	@echo "Doxygen directory cleaned"
 	-rm -f $(EXEC_PATH)
 	@echo "Executable file deleted"
 
@@ -361,19 +370,21 @@ uninstall:
 dvi:
 	@echo "Generating Doxygen documentation..."
 	@if ! command -v doxygen >/dev/null 2>&1; then \
-	  echo "doxygen not found, please install it (e.g. apt install doxygen / brew install doxygen)"; \
+	  echo "doxygen not found (install: apt install doxygen / brew install doxygen)"; \
 	  exit 1; \
 	fi
-	@mkdir -p docs/doxygen
-	@if [ ! -f Doxyfile ]; then \
-	  echo "PROJECT_NAME = \"tetris\" > Doxyfile"; \
-	  echo "OUTPUT_DIRECTORY = docs/doxygen" >> Doxyfile; \
-	  echo "GENERATE_HTML = YES" >> Doxyfile; \
-	  echo "INPUT = $(CORE_DIR) $(CORE_INCLUDE_DIR) $(API_DIR) $(CLI_DIR) $(SHARED_DIR)" >> Doxyfile; \
-	  echo "RECURSIVE = YES" >> Doxyfile; \
-	fi
+
 	doxygen Doxyfile
+
 	@echo "Doxygen documentation generated in docs/doxygen/html"
+
+	@if command -v xdg-open >/dev/null 2>&1; then \
+	  xdg-open docs/doxygen/html/index.html >/dev/null 2>&1 || true; \
+	elif command -v open >/dev/null 2>&1; then \
+	  open docs/doxygen/html/index.html >/dev/null 2>&1 || true; \
+	else \
+	  echo "Open manually: docs/doxygen/html/index.html"; \
+	fi
 
 # ============================================
 # Distribution

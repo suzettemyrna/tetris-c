@@ -182,9 +182,9 @@ START_TEST(tc_updateGameInfoPlayerName_behavior) {
   mock_tetromino_reset();
   mock_score_file_reset();
 
-// initGameInfo() has not been called yet, so player == NULL
-updateGameInfoPlayerName("ABC");
-// Function must handle NULL state without crashing
+  // initGameInfo() has not been called yet, so player == NULL
+  updateGameInfoPlayerName("ABC");
+  // Function must handle NULL state without crashing
 
   initGameInfo();
 

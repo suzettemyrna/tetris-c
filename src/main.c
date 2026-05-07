@@ -4,7 +4,7 @@
   ===================
 */
 
-#include "../api/include/tetris_api.h"
+#include "game_loop/include/game_loop.h"
 
 int main(void) {
   tetrisGameLoop();

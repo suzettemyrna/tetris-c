@@ -11,7 +11,7 @@
 
 #include <stdbool.h>
 
-#include "../../api/include/tetris_api.h"
+#include "../../game_model/game_model.h"
 #include "backend_defines.h"
 
 /**

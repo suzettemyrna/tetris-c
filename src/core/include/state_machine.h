@@ -6,8 +6,17 @@
 #ifndef STATE_MACHINE_H
 #define STATE_MACHINE_H
 
-#include "../../api/include/tetris_api.h"
+#include "../../game_model/game_model.h"
 #include "backend_objects.h"
+
+/**
+ * @brief Represents the current state of the state machine.
+ *
+ * This structure is intentionally minimal and exposed for read-only purposes.
+ */
+typedef struct {
+  GameState_t state; /**< Current game state */
+} StateMachine;
 
 /**
  * @brief Get current control flags.

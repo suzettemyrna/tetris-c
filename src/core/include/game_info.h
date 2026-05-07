@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "../../api/include/tetris_api.h"
+#include "../../game_model/game_model.h"
 #include "../../shared/game_config.h"
 #include "backend_objects.h"
 

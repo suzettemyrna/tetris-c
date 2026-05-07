@@ -1,12 +1,17 @@
 #ifndef TETROMINO_H
 #define TETROMINO_H
 
+/**
+ * @file tetromino.h
+ * @brief Tetromino generation, rotation, and manipulation utilities.
+ */
+
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../api/include/tetris_api.h"
+#include "../../game_model/game_model.h"
 #include "../../shared/game_config.h"
 #include "backend_objects.h"
 
