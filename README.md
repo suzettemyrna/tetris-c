@@ -207,7 +207,65 @@ Dependency direction is strictly enforced.
 
 More detailed:
 
-[module dependencies will be here]
+```mermaid
+---
+title: Game State Machine
+---
+flowchart TD
+    subgraph CLI
+    cli
+    end
+
+    subgraph SHARED
+    game_config_h
+    end
+
+    subgraph GAME_MODEL
+    game_model_h
+    end
+
+    subgraph GAME_LOOP
+    game_loop
+    end
+
+    subgraph CORE
+    subgraph shared interface headers
+    core_config_h
+    core_context_h
+    end
+    subgraph functional modules
+    user_actions
+    state_machine
+    game_info
+    score_file
+    tetromino
+    field_control
+    end
+    end
+
+
+    cli --> game_config_h
+    cli --> game_model_h
+
+    game_model_h --> game_config_h
+    
+    game_loop --> cli
+    game_loop --> user_actions
+    game_loop --> state_machine
+    game_loop --> game_info
+    game_loop --> game_model_h
+
+    core_context_h --> core_config_h
+    core_context_h --> game_model_h
+
+    user_actions --> state_machine
+    user_actions --> game_info
+    state_machine --> game_info
+    game_info --> score_file
+    game_info --> tetromino
+    game_info --> field_control
+    tetromino --> field_control
+```
 
 ---
 
