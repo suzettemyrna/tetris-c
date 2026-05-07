@@ -6,6 +6,7 @@
 
 #include "include/game_loop.h"
 
+#include "../game_model/game_model.h"
 #include "../cli/include/cli.h"
 #include "../core/include/game_info.h"
 #include "../core/include/state_machine.h"
