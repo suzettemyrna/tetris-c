@@ -155,8 +155,8 @@ PUBLIC_HEADERS = \
 
 # Private headers
 PRIVATE_HEADERS = \
-	$(CORE_INCLUDE_DIR)/backend_defines.h \
-	$(CORE_INCLUDE_DIR)/backend_objects.h \
+	$(CORE_INCLUDE_DIR)/core_config.h \
+	$(CORE_INCLUDE_DIR)/core_context.h \
 	$(CORE_INCLUDE_DIR)/field_control.h \
 	$(CORE_INCLUDE_DIR)/game_info.h \
 	$(CORE_INCLUDE_DIR)/score_file.h \

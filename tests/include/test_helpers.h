@@ -10,7 +10,7 @@
 
 #include "../../src/game_model/game_model.h"
 #include "../../src/shared/game_config.h"
-#include "../../src/core/include/backend_objects.h"
+#include "../../src/core/include/core_context.h"
 
 /**
  * @file test_helpers.h

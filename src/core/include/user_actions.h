@@ -16,7 +16,7 @@
 
 #include "../../game_model/game_model.h"
 #include "../../shared/game_config.h"
-#include "backend_objects.h"
+#include "core_context.h"
 
 /**
  * @brief Processes a key input and converts it to a user action.

@@ -11,7 +11,7 @@
 
 #include "../../game_model/game_model.h"
 #include "../../shared/game_config.h"
-#include "backend_objects.h"
+#include "core_context.h"
 
 /**
  * @brief Get current game state snapshot.

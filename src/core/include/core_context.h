@@ -1,8 +1,8 @@
-#ifndef BACKEND_OBJECTS_H
-#define BACKEND_OBJECTS_H
+#ifndef CORE_CONTEXT_H
+#define CORE_CONTEXT_H
 
 /**
- * @file backend_objects.h
+ * @file core_context.h
  * @brief Core data structures used in the Tetris backend.
  *
  * This file defines internal structures representing the game state,
@@ -12,7 +12,7 @@
 #include <stdbool.h>
 
 #include "../../game_model/game_model.h"
-#include "backend_defines.h"
+#include "core_config.h"
 
 /**
  * @brief Flags controlling global game execution flow.
@@ -78,4 +78,4 @@ typedef struct {
   int field[FIELD_HEIGHT][FIELD_WIDTH]; /**< Field grid */
 } Field_t;
 
-#endif  // BACKEND_OBJECTS_H
+#endif  // CORE_CONTEXT_H

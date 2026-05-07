@@ -7,7 +7,7 @@
 #define STATE_MACHINE_H
 
 #include "../../game_model/game_model.h"
-#include "backend_objects.h"
+#include "core_context.h"
 
 /**
  * @brief Represents the current state of the state machine.

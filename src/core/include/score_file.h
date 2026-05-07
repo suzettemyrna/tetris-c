@@ -8,7 +8,7 @@
 #include <string.h>
 
 #include "../../shared/game_config.h"
-#include "backend_objects.h"
+#include "core_context.h"
 
 /**
  * @file score_file.h

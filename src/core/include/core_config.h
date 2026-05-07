@@ -1,8 +1,8 @@
-#ifndef BACKEND_DEFINES_H
-#define BACKEND_DEFINES_H
+#ifndef CORE_CONFIG_H
+#define CORE_CONFIG_H
 
 /**
- * @file backend_defines.h
+ * @file core_config.h
  * @brief Internal constants for Tetris backend logic.
  *
  * This file contains implementation-specific constants used by the backend.
@@ -62,4 +62,4 @@
 /** Initial Y position for spawning tetromino */
 #define TETROMINO_SPAWN_Y 0
 
-#endif  // BACKEND_DEFINES_H
+#endif  // CORE_CONFIG_H

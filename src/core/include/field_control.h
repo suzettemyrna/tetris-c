@@ -11,7 +11,7 @@
 #include <string.h>
 
 #include "../../game_model/game_model.h"
-#include "backend_objects.h"
+#include "core_context.h"
 
 // ============================================
 // Field state (used by game_info)
