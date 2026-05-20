@@ -209,40 +209,53 @@ More detailed:
 
 ```mermaid
 ---
-title: Game State Machine
+title: Module Dependencies
 ---
 flowchart TD
-    subgraph CLI
-    cli
+    subgraph "`**CLI**`"
+        cli
     end
 
-    subgraph SHARED
-    game_config_h
+    subgraph "`**SHARED**`"
+        game_config_h
     end
 
-    subgraph GAME_MODEL
-    game_model_h
+    subgraph "`**GAME_MODEL**`"
+        game_model_h
     end
 
-    subgraph GAME_LOOP
-    game_loop
+    subgraph "`**GAME_LOOP**`"
+        game_loop
     end
 
-    subgraph CORE
-    subgraph shared interface headers
-    core_config_h
-    core_context_h
-    end
-    subgraph functional modules
-    user_actions
-    state_machine
-    game_info
-    score_file
-    tetromino
-    field_control
-    end
+    subgraph "`**CORE**`"
+        subgraph sih:["shared interface headers"]
+            core_config_h
+        core_context_h
+        end
+        subgraph fm:["functional modules"]
+            user_actions
+            state_machine
+            game_info
+            score_file
+            tetromino
+            field_control
+        end
     end
 
+    functional_modules
+    shared_interface_headers
+
+    style functional_modules fill:#C1FFB5, stroke:#6C9662
+
+    style game_loop fill:#C1FFB5, stroke:#6C9662
+    style user_actions fill:#C1FFB5, stroke:#6C9662
+    style state_machine fill:#C1FFB5, stroke:#6C9662
+    style game_info fill:#C1FFB5, stroke:#6C9662
+    style score_file fill:#C1FFB5, stroke:#6C9662
+    style tetromino fill:#C1FFB5, stroke:#6C9662
+    style field_control fill:#C1FFB5, stroke:#6C9662
+    style cli fill:#C1FFB5, stroke:#6C9662
 
     cli --> game_config_h
     cli --> game_model_h
@@ -265,6 +278,13 @@ flowchart TD
     game_info --> tetromino
     game_info --> field_control
     tetromino --> field_control
+
+    user_actions --> core_context_h
+    state_machine --> core_context_h
+    game_info --> core_context_h
+    tetromino --> core_context_h
+    field_control --> core_context_h
+    score_file --> core_context_h
 ```
 
 ---
