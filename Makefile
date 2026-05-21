@@ -393,7 +393,7 @@ dvi:
 dist: clean
 	@mkdir -p dist
 	tar -czf dist/tetris-1.0.tar.gz --exclude='dist' --exclude='.git' --exclude='*.o' --exclude='a.out' --exclude='$(BUILD_DIR)/*' .
-	@echo "Distribution package created: dist/tetris-1.0.tar.gz”
+	@echo "Distribution package created: dist/tetris-1.0.tar.gz"
 
 # ============================================
 # Code style (check and format)
